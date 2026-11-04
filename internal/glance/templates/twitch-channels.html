@@ -31,13 +31,13 @@
                         {{ end }}
                     <ul class="list-horizontal-text">
                         <li {{ dynamicRelativeTimeAttrs .LiveSince }}></li>
-                        <li>{{ .ViewersCount | formatApproxNumber }} viewers</li>
+                        <li>{{ .ViewersCount | formatApproxNumber }} {{ T "viewers" }}</li>
                     </ul>
                     {{ else }}
-                    <div>Offline</div>
+                    <div>{{ T "Offline" }}</div>
                     {{ end }}
                 {{ else }}
-                <div class="color-negative">Not found</div>
+                <div class="color-negative">{{ T "Not found" }}</div>
                 {{ end }}
             </div>
         </div>

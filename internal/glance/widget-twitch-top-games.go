@@ -23,7 +23,7 @@ type twitchGamesWidget struct {
 
 func (widget *twitchGamesWidget) initialize() error {
 	widget.
-		withTitle("Top games on Twitch").
+		withTitle(T("Top games on Twitch")).
 		withTitleURL("https://www.twitch.tv/directory?sort=VIEWER_COUNT").
 		withCacheDuration(time.Minute * 10)
 

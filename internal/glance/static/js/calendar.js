@@ -1,9 +1,8 @@
 import { directions, easeOutQuint, slideFade } from "./animations.js";
 import { elem, repeat, text } from "./templating.js";
+import { t, monthNames as MONTH_NAMES, weekDayAbbrs as WEEKDAY_ABBRS } from "./i18n.js";
 
 const FULL_MONTH_SLOTS = 7*6;
-const WEEKDAY_ABBRS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 const leftArrowSvg = `<svg stroke="var(--color-text-base)" fill="none" viewBox="0 0 24 24" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -85,7 +84,7 @@ function Header(nextClicked, prevClicked, undoClicked) {
         undo = button()
             .hide()
             .classes("calendar-undo-button")
-            .attr("title", "Back to current month")
+            .attr("title", t("Back to current month"))
             .on("click", undoClicked)
             .html(undoArrowSvg)
     );
@@ -94,14 +93,14 @@ function Header(nextClicked, prevClicked, undoClicked) {
         .classes("flex", "gap-7", "items-center")
         .append(
             button()
-                .attr("title", "Previous month")
+                .attr("title", t("Previous month"))
                 .on("click", prevClicked)
                 .html(leftArrowSvg),
             monthNumber = elem()
                 .classes("color-highlight")
                 .styles({ marginTop: "0.1rem" }),
             button()
-                .attr("title", "Next month")
+                .attr("title", t("Next month"))
                 .on("click", nextClicked)
                 .html(rightArrowSvg),
         );

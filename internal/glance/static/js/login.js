@@ -1,4 +1,5 @@
 import { find } from "./templating.js";
+import { t } from "./i18n.js";
 
 const AUTH_ENDPOINT = pageData.baseURL + "/api/authenticate";
 
@@ -26,11 +27,11 @@ const state = {
 };
 
 const lang = {
-    showPassword: "Show password",
-    hidePassword: "Hide password",
-    incorrectCredentials: "Incorrect username or password",
-    rateLimited: "Too many login attempts, try again in a few minutes",
-    unknownError: "An error occurred, please try again",
+    showPassword: t("Show password"),
+    hidePassword: t("Hide password"),
+    incorrectCredentials: t("Incorrect username or password"),
+    rateLimited: t("Too many login attempts, try again in a few minutes"),
+    unknownError: t("An error occurred, please try again"),
 };
 
 container.clearStyles("display");

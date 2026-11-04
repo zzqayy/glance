@@ -2,6 +2,7 @@ import { setupPopovers } from './popover.js';
 import { setupMasonries } from './masonry.js';
 import { throttledDebounce, isElementVisible, openURLInNewTab } from './utils.js';
 import { elem, find, findAll } from './templating.js';
+import { t, timestampToRelativeTime, zoneDiffText, weekDayNames, localizedDate } from './i18n.js';
 
 async function fetchPageContent(pageData) {
     // TODO: handle non 200 status codes/time outs
@@ -45,40 +46,6 @@ function setupCarousels() {
 
         afterContentReady(determineSideCutoffs);
     }
-}
-
-const minuteInSeconds = 60;
-const hourInSeconds = minuteInSeconds * 60;
-const dayInSeconds = hourInSeconds * 24;
-const monthInSeconds = dayInSeconds * 30.4;
-const yearInSeconds = dayInSeconds * 365;
-
-function timestampToRelativeTime(timestamp) {
-    let delta = Math.round((Date.now() / 1000) - timestamp);
-    let prefix = "";
-
-    if (delta < 0) {
-        delta = -delta;
-        prefix = "in ";
-    }
-
-    if (delta < minuteInSeconds) {
-        return prefix + "1m";
-    }
-    if (delta < hourInSeconds) {
-        return prefix + Math.floor(delta / minuteInSeconds) + "m";
-    }
-    if (delta < dayInSeconds) {
-        return prefix + Math.floor(delta / hourInSeconds) + "h";
-    }
-    if (delta < monthInSeconds) {
-        return prefix + Math.floor(delta / dayInSeconds) + "d";
-    }
-    if (delta < yearInSeconds) {
-        return prefix + Math.floor(delta / monthInSeconds) + "mo";
-    }
-
-    return prefix + Math.floor(delta / yearInSeconds) + "y";
 }
 
 function updateRelativeTimeForElements(elements)
@@ -341,8 +308,8 @@ function setupLazyImages() {
 }
 
 function attachExpandToggleButton(collapsibleContainer) {
-    const showMoreText = "Show more";
-    const showLessText = "Show less";
+    const showMoreText = t("Show more");
+    const showLessText = t("Show less");
 
     let expanded = false;
     const button = document.createElement("button");
@@ -499,9 +466,6 @@ function afterContentReady(callback) {
     contentReadyCallbacks.push(callback);
 }
 
-const weekDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
 function makeSettableTimeElement(element, hourFormat) {
     const fragment = document.createDocumentFragment();
     const hour = document.createElement('span');
@@ -546,31 +510,6 @@ function timeInZone(now, zone) {
     return { time: timeInZone, diffInMinutes: diffInMinutes };
 }
 
-function zoneDiffText(diffInMinutes) {
-    if (diffInMinutes == 0) {
-        return "";
-    }
-
-    const sign = diffInMinutes < 0 ? "-" : "+";
-    const signText = diffInMinutes < 0 ? "behind" : "ahead";
-
-    diffInMinutes = Math.abs(diffInMinutes);
-
-    const hours = Math.floor(diffInMinutes / 60);
-    const minutes = diffInMinutes % 60;
-    const hourSuffix = hours == 1 ? "" : "s";
-
-    if (minutes == 0) {
-        return { text: `${sign}${hours}h`, title: `${hours} hour${hourSuffix} ${signText}` };
-    }
-
-    if (hours == 0) {
-        return { text: `${sign}${minutes}m`, title: `${minutes} minutes ${signText}` };
-    }
-
-    return { text: `${sign}${hours}h~`, title: `${hours} hour${hourSuffix} and ${minutes} minutes ${signText}` };
-}
-
 function setupClocks() {
     const clocks = document.getElementsByClassName('clock');
 
@@ -596,7 +535,7 @@ function setupClocks() {
 
         updateCallbacks.push((now) => {
             setLocalTime(now);
-            localDateElement.textContent = now.getDate() + ' ' + monthNames[now.getMonth()];
+            localDateElement.textContent = localizedDate(now);
             localWeekdayElement.textContent = weekDayNames[now.getDay()];
             localYearElement.textContent = now.getFullYear();
         });
@@ -676,7 +615,7 @@ async function changeTheme(key, onChanged) {
     });
 
     if (response.status != 200) {
-        alert("Failed to set theme: " + response.statusText);
+        alert(t("Failed to set theme") + ": " + response.statusText);
         return;
     }
     const newThemeStyle = await response.text();
@@ -743,7 +682,7 @@ function initThemePicker() {
                     const clone = presetElement.cloneNode(true);
 
                     clone.removeAttribute("aria-pressed");
-                    clone.setAttribute("aria-label", "Change theme");
+                    clone.setAttribute("aria-label", t("Change theme"));
 
                     button.replaceWith(clone);
                 });

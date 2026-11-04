@@ -35,7 +35,7 @@ type monitorWidget struct {
 }
 
 func (widget *monitorWidget) initialize() error {
-	widget.withTitle("Monitor").withCacheDuration(5 * time.Minute)
+	widget.withTitle(T("Monitor")).withCacheDuration(5 * time.Minute)
 
 	return nil
 }
@@ -88,7 +88,7 @@ func statusCodeToText(status int, altStatusCodes []int) string {
 		return "OK"
 	}
 	if status == 404 {
-		return "Not Found"
+		return T("Not Found")
 	}
 	if status == 403 {
 		return "Forbidden"
@@ -97,10 +97,10 @@ func statusCodeToText(status int, altStatusCodes []int) string {
 		return "Unauthorized"
 	}
 	if status >= 500 {
-		return "Server Error"
+		return T("Server Error")
 	}
 	if status >= 400 {
-		return "Client Error"
+		return T("Client Error")
 	}
 
 	return strconv.Itoa(status)

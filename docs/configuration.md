@@ -10,6 +10,7 @@
   - [Config schema](#config-schema)
 - [Authentication](#authentication)
 - [Server](#server)
+- [Language](#language)
 - [Document](#document)
 - [Branding](#branding)
 - [Theme](#theme)
@@ -358,6 +359,19 @@ To be able to point to an asset from your assets path, use the `/assets/` path l
 ```yaml
 icon: /assets/gitea-icon.png
 ```
+
+## Language
+The language of the UI can be changed through a top level `language` property. Example:
+
+```yaml
+language: zh-CN
+```
+
+| Name | Type | Required | Default |
+| ---- | ---- | -------- | ------- |
+| language | string | no | en |
+
+Supported values are `en` and `zh-CN`. The language affects UI text, widget titles (when not set in the config), number formats, relative times and the names returned by the Weather widget's location lookup. When the language is set to `zh-CN`, large numbers are approximated in units of 万 (10k) and 亿 (100M) instead of k and m.
 
 ## Document
 If you want to insert custom HTML into the `<head>` of the document for all pages, you can do so by using the `document` property. Example:

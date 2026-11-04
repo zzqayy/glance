@@ -41,14 +41,14 @@ var searchEngines = map[string]string{
 }
 
 func (widget *searchWidget) initialize() error {
-	widget.withTitle("Search").withError(nil)
+	widget.withTitle(T("Search")).withError(nil)
 
 	if widget.SearchEngine == "" {
 		widget.SearchEngine = "duckduckgo"
 	}
 
 	if widget.Placeholder == "" {
-		widget.Placeholder = "Type here to search…"
+		widget.Placeholder = T("Type here to search…")
 	}
 
 	if url, ok := searchEngines[widget.SearchEngine]; ok {

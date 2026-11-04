@@ -24,7 +24,7 @@ type twitchChannelsWidget struct {
 
 func (widget *twitchChannelsWidget) initialize() error {
 	widget.
-		withTitle("Twitch Channels").
+		withTitle(T("Twitch Channels")).
 		withTitleURL("https://www.twitch.tv/directory/following").
 		withCacheDuration(time.Minute * 10)
 

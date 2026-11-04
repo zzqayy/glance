@@ -21,7 +21,7 @@ type serverStatsWidget struct {
 }
 
 func (widget *serverStatsWidget) initialize() error {
-	widget.withTitle("Server Stats").withCacheDuration(15 * time.Second)
+	widget.withTitle(T("Server Stats")).withCacheDuration(15 * time.Second)
 	widget.widgetBase.WIP = true
 
 	if len(widget.Servers) == 0 {

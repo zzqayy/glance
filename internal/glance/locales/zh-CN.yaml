@@ -1,0 +1,133 @@
+# Chinese (Simplified) translations for Glance.
+# Keys are the English source strings; any string missing from this file falls back to English.
+WORK IN PROGRESS: 开发中
+This widget is still in development, certain features may not work as expected or may change drastically.: 该小组件仍在开发中，部分功能可能不符合预期或发生较大变化。
+Report issue: 报告问题
+ERROR: 错误
+No error information provided: 未提供错误信息
+
+Logout: 登出
+Change theme: 切换主题
+Loading: 加载中
+Release notes: 版本说明
+
+Login: 登录
+Username: 用户名
+Enter your username: 输入用户名
+Password: 密码
+LOGIN: 登录
+Show password: 显示密码
+Hide password: 隐藏密码
+Incorrect username or password: 用户名或密码错误
+Too many login attempts, try again in a few minutes: 登录尝试过于频繁，请几分钟后再试
+An error occurred, please try again: 发生错误，请重试
+
+Press [S] to focus the search input: 按 [S] 聚焦搜索框
+Type here to search…: 输入以搜索…
+
+stars: 星标
+forks: 复刻
+Last %d commits: 最近 %d 次提交
+Open pull requests (%s total): 开启的拉取请求（共 %s 个）
+Open issues (%s total): 开启的议题（共 %s 个）
+points: 分
+comments: 评论
+
+No watches configured: 未配置监控项
+diff: 差异
+No containers available to show.: 没有可显示的容器。
+All sites are online: 所有站点均在线
+Timed Out: 超时
+Not found: 未找到
+Not Found: 未找到
+Offline: 离线
+viewers: 观众
+NEW: 新
+
+Feels like: 体感
+unknown: 未知
+Unknown: 未知
+uptime: 运行时长
+unreachable: 无法连接
+n/a: 无
+PLATFORM: 平台
+CPU: CPU
+1M AVG: 1分钟平均
+15M AVG: 15分钟平均
+TEMP C: 温度
+RAM: 内存
+SWAP: 交换分区
+DISK: 磁盘
+
+QUERIES: 查询
+BLOCKED: 拦截
+LATENCY: 延迟
+DOMAINS: 域名
+Top blocked domains: 拦截最多的域名
+Total number of blocked domains from all adlists: 所有广告拦截列表中被拦截的域名总数
+
+Week %s: 第 %s 周
+Su: 日
+Mo: 一
+Tu: 二
+We: 三
+Th: 四
+Fr: 五
+Sa: 六
+
+theme: 主题
+
+Show more: 展开
+Show less: 收起
+Failed to set theme: 设置主题失败
+Back to current month: 回到当前月份
+Previous month: 上个月
+Next month: 下个月
+Add a task: 添加任务
+empty task: 空任务
+
+Page not found: 页面不存在
+No items were returned from the feeds.: 订阅源没有返回任何内容。
+Server Error: 服务器错误
+Client Error: 客户端错误
+
+# Widget default titles
+Bookmarks: 书签
+Calendar: 日历
+Change Detection: 变化检测
+Clock: 时钟
+Custom API: 自定义 API
+DNS Stats: DNS 统计
+Docker Containers: Docker 容器
+Extension: 扩展
+Markets: 行情
+Monitor: 监控
+Releases: 版本发布
+Repository: 仓库
+RSS Feed: RSS 订阅
+Search: 搜索
+Server Stats: 服务器状态
+Split Column: 分栏
+To-do: 待办
+Twitch Channels: Twitch 频道
+Top games on Twitch: Twitch 热门游戏
+Videos: 视频
+Weather: 天气
+
+# Weather conditions
+Clear Sky: 晴
+Mainly Clear: 大部晴朗
+Partly Cloudy: 局部多云
+Overcast: 阴
+Fog: 雾
+Rime Fog: 雾凇
+Drizzle: 毛毛雨
+Rain: 雨
+Moderate Rain: 中雨
+Heavy Rain: 大雨
+Freezing Rain: 冻雨
+Snow: 雪
+Moderate Snow: 中雪
+Heavy Snow: 大雪
+Snow Grains: 雪粒
+Thunderstorm: 雷暴

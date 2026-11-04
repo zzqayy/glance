@@ -15,7 +15,7 @@ type oldCalendarWidget struct {
 }
 
 func (widget *oldCalendarWidget) initialize() error {
-	widget.withTitle("Calendar").withCacheOnTheHour()
+	widget.withTitle(T("Calendar")).withCacheOnTheHour()
 
 	return nil
 }
@@ -35,6 +35,16 @@ type calendar struct {
 	CurrentMonthName  string
 	CurrentYear       int
 	Days              []int
+}
+
+var zhMonthNames = []string{"一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"}
+
+func localizedMonthName(m time.Month) string {
+	if isZhLanguage() {
+		return zhMonthNames[int(m)-1]
+	}
+
+	return m.String()
 }
 
 // TODO: very inflexible, refactor to allow more customizability
@@ -75,7 +85,7 @@ func newCalendar(now time.Time, startSunday bool) *calendar {
 	return &calendar{
 		CurrentDay:        now.Day(),
 		CurrentWeekNumber: week,
-		CurrentMonthName:  now.Month().String(),
+		CurrentMonthName:  localizedMonthName(now.Month()),
 		CurrentYear:       year,
 		Days:              days,
 	}

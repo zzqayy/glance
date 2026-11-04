@@ -29,7 +29,7 @@ type extensionWidget struct {
 }
 
 func (widget *extensionWidget) initialize() error {
-	widget.withTitle(extensionWidgetDefaultTitle).withCacheDuration(time.Minute * 30)
+	widget.withTitle(T(extensionWidgetDefaultTitle)).withCacheDuration(time.Minute * 30)
 
 	if widget.URL == "" {
 		return errors.New("URL is required")
@@ -55,7 +55,7 @@ func (widget *extensionWidget) update(ctx context.Context) {
 
 	widget.Extension = extension
 
-	if widget.Title == extensionWidgetDefaultTitle && extension.Title != "" {
+	if widget.Title == T(extensionWidgetDefaultTitle) && extension.Title != "" {
 		widget.Title = extension.Title
 	}
 

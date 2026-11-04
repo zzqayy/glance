@@ -27,7 +27,7 @@ type dockerContainersWidget struct {
 }
 
 func (widget *dockerContainersWidget) initialize() error {
-	widget.withTitle("Docker Containers").withCacheDuration(1 * time.Minute)
+	widget.withTitle(T("Docker Containers")).withCacheDuration(1 * time.Minute)
 
 	if widget.SockPath == "" {
 		widget.SockPath = "/var/run/docker.sock"

@@ -281,6 +281,10 @@ type templateRequestData struct {
 	Theme *themeProperties
 }
 
+func (a *application) I18nTranslations() map[string]string {
+	return currentTranslations
+}
+
 type templateData struct {
 	App     *application
 	Page    *page
@@ -407,7 +411,7 @@ func (a *application) addressOfRequest(r *http.Request) string {
 func (a *application) handleNotFound(w http.ResponseWriter, _ *http.Request) {
 	// TODO: add proper not found page
 	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte("Page not found"))
+	w.Write([]byte(T("Page not found")))
 }
 
 func (a *application) handleWidgetRequest(w http.ResponseWriter, r *http.Request) {

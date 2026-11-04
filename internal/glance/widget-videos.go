@@ -36,7 +36,7 @@ type videosWidget struct {
 }
 
 func (w *videosWidget) initialize() error {
-	w.withTitle("Videos").withCacheDuration(time.Hour)
+	w.withTitle(T("Videos")).withCacheDuration(time.Hour)
 
 	if w.Limit <= 0 {
 		w.Limit = 25

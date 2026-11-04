@@ -33,7 +33,7 @@ var timeLabels12h = [12]string{"2am", "4am", "6am", "8am", "10am", "12pm", "2pm"
 var timeLabels24h = [12]string{"02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00", "00:00"}
 
 func (widget *weatherWidget) initialize() error {
-	widget.withTitle("Weather").withCacheOnTheHour()
+	widget.withTitle(T("Weather")).withCacheOnTheHour()
 
 	if widget.Location == "" {
 		return fmt.Errorf("location is required")
@@ -92,7 +92,7 @@ type weather struct {
 
 func (w *weather) WeatherCodeAsString() string {
 	if weatherCode, ok := weatherCodeTable[w.WeatherCode]; ok {
-		return weatherCode
+		return T(weatherCode)
 	}
 
 	return ""
@@ -168,13 +168,30 @@ func parsePlaceName(name string) (string, string) {
 	return parts[0] + ", " + expandCountryAbbreviations(parts[2]), strings.TrimSpace(parts[1])
 }
 
+func fetchOpenMeteoPlaces(location string, language string) (openMeteoPlacesResponseJson, error) {
+	requestUrl := fmt.Sprintf("https://geocoding-api.open-meteo.com/v1/search?name=%s&count=20&language=%s&format=json", url.QueryEscape(location), language)
+	request, _ := http.NewRequest("GET", requestUrl, nil)
+	return decodeJsonFromRequest[openMeteoPlacesResponseJson](defaultHTTPClient, request)
+}
+
+func openMeteoLanguage() string {
+	if isZhLanguage() {
+		return "zh"
+	}
+
+	return "en"
+}
+
 func fetchOpenMeteoPlaceFromName(location string) (*openMeteoPlaceResponseJson, error) {
 	location, area := parsePlaceName(location)
-	requestUrl := fmt.Sprintf("https://geocoding-api.open-meteo.com/v1/search?name=%s&count=20&language=en&format=json", url.QueryEscape(location))
-	request, _ := http.NewRequest("GET", requestUrl, nil)
-	responseJson, err := decodeJsonFromRequest[openMeteoPlacesResponseJson](defaultHTTPClient, request)
+
+	responseJson, err := fetchOpenMeteoPlaces(location, openMeteoLanguage())
 	if err != nil {
-		return nil, fmt.Errorf("fetching places data: %v", err)
+		// fall back to English results when the localized lookup fails
+		responseJson, err = fetchOpenMeteoPlaces(location, "en")
+		if err != nil {
+			return nil, fmt.Errorf("fetching places data: %v", err)
+		}
 	}
 
 	if len(responseJson.Results) == 0 {

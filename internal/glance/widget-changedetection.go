@@ -24,7 +24,7 @@ type changeDetectionWidget struct {
 }
 
 func (widget *changeDetectionWidget) initialize() error {
-	widget.withTitle("Change Detection").withCacheDuration(1 * time.Hour)
+	widget.withTitle(T("Change Detection")).withCacheDuration(1 * time.Hour)
 
 	if widget.Limit <= 0 {
 		widget.Limit = 10

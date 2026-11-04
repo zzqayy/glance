@@ -44,7 +44,7 @@
             </div>
             {{ end }}
             {{- if .App.RequiresAuth }}
-            <a class="block self-center" href="{{ .App.Config.Server.BaseURL }}/logout" title="Logout">
+            <a class="block self-center" href="{{ .App.Config.Server.BaseURL }}/logout" title="{{ T "Logout" }}">
                 <svg class="logout-button" stroke="var(--color-text-subdue)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
                 </svg>
@@ -79,7 +79,7 @@
                     </div>
                 </div>
 
-                <div class="size-h3 pointer-events-none select-none">Change theme</div>
+                <div class="size-h3 pointer-events-none select-none">{{ T "Change theme" }}</div>
 
                 <div class="flex gap-15 items-center pointer-events-none">
                     <div class="current-theme-preview">
@@ -94,7 +94,7 @@
 
             {{ if .App.RequiresAuth }}
             <a href="{{ .App.Config.Server.BaseURL }}/logout" class="flex justify-between items-center">
-                <div class="size-h3">Logout</div>
+                <div class="size-h3">{{ T "Logout" }}</div>
                 <svg class="ui-icon" stroke="var(--color-text-subdue)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
                 </svg>
@@ -108,7 +108,7 @@
             <h1 class="visually-hidden">{{ .Page.Title }}</h1>
             <div class="page-content" id="page-content"></div>
             <div class="page-loading-container">
-                <div class="visually-hidden">Loading</div>
+                <div class="visually-hidden">{{ T "Loading" }}</div>
                 <div class="loading-icon" aria-hidden="true"></div>
             </div>
         </main>

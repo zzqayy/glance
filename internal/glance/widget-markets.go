@@ -25,7 +25,7 @@ type marketsWidget struct {
 }
 
 func (widget *marketsWidget) initialize() error {
-	widget.withTitle("Markets").withCacheDuration(time.Hour)
+	widget.withTitle(T("Markets")).withCacheDuration(time.Hour)
 
 	// legacy support, remove in v0.10.0
 	if len(widget.MarketRequests) == 0 {

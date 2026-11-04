@@ -68,7 +68,7 @@ func (widget *dnsStatsWidget) initialize() error {
 	}
 
 	widget.
-		withTitle("DNS Stats").
+		withTitle(T("DNS Stats")).
 		withTitleURL(titleURL).
 		withCacheDuration(10 * time.Minute)
 

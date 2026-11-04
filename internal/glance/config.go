@@ -28,6 +28,8 @@ const (
 )
 
 type config struct {
+	Language string `yaml:"language"`
+
 	Server struct {
 		Host       string `yaml:"host"`
 		Port       uint16 `yaml:"port"`
@@ -106,6 +108,15 @@ func newConfigFromYAML(contents []byte) (*config, error) {
 	}
 
 	if err = isConfigStateValid(config); err != nil {
+		return nil, err
+	}
+
+	if config.Language == "" {
+		config.Language = "en"
+	}
+
+	// Set before widgets initialize so default titles render in the configured language
+	if err = setLocale(config.Language); err != nil {
 		return nil, err
 	}
 

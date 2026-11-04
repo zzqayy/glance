@@ -13,6 +13,7 @@ import (
 var intl = message.NewPrinter(language.English)
 
 var globalTemplateFunctions = template.FuncMap{
+	"T":                  T,
 	"formatApproxNumber": formatApproxNumber,
 	"formatNumber":       intl.Sprint,
 	"safeCSS": func(str string) template.CSS {
@@ -71,6 +72,18 @@ func mustParseTemplate(primary string, dependencies ...string) *template.Templat
 }
 
 func formatApproxNumber(count int) string {
+	if isZhLanguage() {
+		if count < 10_000 {
+			return strconv.Itoa(count)
+		}
+
+		if count < 100_000_000 {
+			return strconv.FormatFloat(float64(count)/10_000, 'f', 1, 64) + "万"
+		}
+
+		return strconv.FormatFloat(float64(count)/100_000_000, 'f', 1, 64) + "亿"
+	}
+
 	if count < 1_000 {
 		return strconv.Itoa(count)
 	}

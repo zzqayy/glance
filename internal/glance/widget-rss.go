@@ -47,7 +47,7 @@ type rssWidget struct {
 }
 
 func (widget *rssWidget) initialize() error {
-	widget.withTitle("RSS Feed").withCacheDuration(2 * time.Hour)
+	widget.withTitle(T("RSS Feed")).withCacheDuration(2 * time.Hour)
 
 	if widget.Limit <= 0 {
 		widget.Limit = 25
@@ -71,7 +71,7 @@ func (widget *rssWidget) initialize() error {
 		}
 	}
 
-	widget.NoItemsMessage = "No items were returned from the feeds."
+	widget.NoItemsMessage = T("No items were returned from the feeds.")
 	widget.cachedFeeds = make(map[string]*cachedRSSFeed)
 
 	return nil

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" id="top" data-theme="{{ .Request.Theme.Key }}" data-scheme="{{ if .Request.Theme.Light }}light{{ else }}dark{{ end }}">
+<html lang="{{ .App.Config.Language }}" id="top" data-theme="{{ .Request.Theme.Key }}" data-scheme="{{ if .Request.Theme.Light }}light{{ else }}dark{{ end }}">
 <head>
     {{ block "document-head-before" . }}{{ end }}
     <script>
     if (navigator.platform === 'iPhone') document.documentElement.classList.add('ios');
+    window.__glanceI18n = {{ .App.I18nTranslations }};
     const pageData = {
         /*{{ if .Page }}*/slug: "{{ .Page.Slug }}",/*{{ end }}*/
         baseURL: "{{ .App.Config.Server.BaseURL }}",

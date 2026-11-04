@@ -5,23 +5,23 @@
     <div class="flex justify-between items-center">
         <div class="color-highlight size-h1">{{ .Calendar.CurrentMonthName }}</div>
         <ul class="list-horizontal-text color-highlight size-h4">
-            <li>Week {{ .Calendar.CurrentWeekNumber }}</li>
+            <li>{{ T "Week %s" .Calendar.CurrentWeekNumber }}</li>
             <li>{{ .Calendar.CurrentYear }}</li>
         </ul>
     </div>
 
     <div class="flex flex-wrap size-h6 margin-top-10 color-subdue">
         {{ if .StartSunday }}
-            <div class="old-calendar-day">Su</div>
+            <div class="old-calendar-day">{{ T "Su" }}</div>
         {{ end }}
-        <div class="old-calendar-day">Mo</div>
-        <div class="old-calendar-day">Tu</div>
-        <div class="old-calendar-day">We</div>
-        <div class="old-calendar-day">Th</div>
-        <div class="old-calendar-day">Fr</div>
-        <div class="old-calendar-day">Sa</div>
+        <div class="old-calendar-day">{{ T "Mo" }}</div>
+        <div class="old-calendar-day">{{ T "Tu" }}</div>
+        <div class="old-calendar-day">{{ T "We" }}</div>
+        <div class="old-calendar-day">{{ T "Th" }}</div>
+        <div class="old-calendar-day">{{ T "Fr" }}</div>
+        <div class="old-calendar-day">{{ T "Sa" }}</div>
         {{ if not .StartSunday }}
-            <div class="old-calendar-day">Su</div>
+            <div class="old-calendar-day">{{ T "Su" }}</div>
         {{ end }}
     </div>
 

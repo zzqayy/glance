@@ -35,7 +35,7 @@ type bookmarksWidget struct {
 }
 
 func (widget *bookmarksWidget) initialize() error {
-	widget.withTitle("Bookmarks").withError(nil)
+	widget.withTitle(T("Bookmarks")).withError(nil)
 
 	for g := range widget.Groups {
 		group := &widget.Groups[g]
