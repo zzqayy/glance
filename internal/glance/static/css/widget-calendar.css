@@ -18,13 +18,71 @@
 }
 
 .calendar-date {
-    padding: 0.4rem 0;
+    padding: 0.3rem 0 0.25rem;
     color: var(--color-text-base);
     position: relative;
     border-radius: var(--border-radius);
     background: none;
     border: none;
     font: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.calendar-date-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    height: 4px;
+}
+
+.calendar-date:not(.calendar-has-events) .calendar-date-dots {
+    visibility: hidden;
+}
+
+.calendar-event-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background-color: var(--color-primary);
+}
+
+.calendar-events {
+    padding-top: 0.8rem;
+    margin-top: 0.8rem;
+    border-top: 1px solid var(--color-separator);
+}
+
+.calendar-events-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.calendar-event {
+    min-width: 0;
+    overflow-wrap: break-word;
+    padding-left: 1rem;
+    text-indent: -1rem;
+}
+
+.calendar-event-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+}
+
+.calendar-event-time {
+    margin-right: 0.4rem;
 }
 
 .calendar-current-date {

@@ -2759,13 +2759,17 @@ Optionally, override the display value for the timezone to something more meanin
 
 
 ### Calendar
-Display a calendar.
+Display a calendar with optional subscriptions to iCal (ICS) files, e.g. from Google Calendar, Outlook or Nextcloud. Events are shown as colored dots on the calendar as well as in a list below it.
 
 Example:
 
 ```yaml
 - type: calendar
   first-day-of-week: monday
+  calendars:
+    - url: https://calendar.google.com/calendar/ical/xxxxx/basic.ics
+      color: "#ff0000"
+    - url: https://example.com/calendar/holidays.ics
 ```
 
 Preview:
@@ -2777,9 +2781,24 @@ Preview:
 | Name | Type | Required | Default |
 | ---- | ---- | -------- | ------- |
 | first-day-of-week | string | no | monday |
+| calendars | list | no | - |
 
 ##### `first-day-of-week`
 The day of the week that the calendar starts on. All week days are available as possible values.
+
+##### `calendars`
+A list of iCal (ICS) files to subscribe to. Events are fetched every hour and shown for the previous month as well as the upcoming year. Recurring events (`RRULE`), excluded dates (`EXDATE`), additional dates (`RDATE`) and overridden instances (`RECURRENCE-ID`) are supported, as are events whose timezone is defined through an IANA or Windows timezone identifier.
+
+| Name | Type | Required | Default |
+| ---- | ---- | -------- | ------- |
+| url | string | yes | |
+| color | string | no | auto-assigned |
+
+##### `url`
+The URL of the iCal (ICS) file.
+
+##### `color`
+The color events of this subscription are highlighted with. Must be a hex color, e.g. `#ff0000`. When not specified, a color is assigned automatically from the theme.
 
 ### Calendar (legacy)
 Display a calendar.

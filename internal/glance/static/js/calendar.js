@@ -1,8 +1,9 @@
 import { directions, easeOutQuint, slideFade } from "./animations.js";
 import { elem, repeat, text } from "./templating.js";
-import { t, monthNames as MONTH_NAMES, weekDayAbbrs as WEEKDAY_ABBRS } from "./i18n.js";
+import { t, monthNames as MONTH_NAMES, weekDayAbbrs as WEEKDAY_ABBRS, localizedDate } from "./i18n.js";
 
 const FULL_MONTH_SLOTS = 7*6;
+const MAX_DOTS_PER_DAY = 3;
 
 const leftArrowSvg = `<svg stroke="var(--color-text-base)" fill="none" viewBox="0 0 24 24" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -29,14 +30,25 @@ const [datesEntranceLeft, datesEntranceRight] = directions(
 const undoEntrance = slideFade({ direction: "left", distance: "100%", duration: 300 });
 
 export default function(element) {
+    let events = [];
+
+    if (element.dataset.events) {
+        try {
+            events = JSON.parse(element.dataset.events);
+        } catch {
+            events = [];
+        }
+    }
+
     element.swapWith(Calendar(
-        Number(element.dataset.firstDayOfWeek ?? 1)
+        Number(element.dataset.firstDayOfWeek ?? 1),
+        events
     ));
 }
 
 // TODO: when viewing the previous/next month, display the current date if it's within the spill-over days
-function Calendar(firstDay) {
-    let header, dates;
+function Calendar(firstDay, events) {
+    let header, dates, eventsList;
     let advanceTimeTicker;
     let now = new Date();
     let activeDate;
@@ -44,6 +56,7 @@ function Calendar(firstDay) {
     const update = (newDate) => {
         header.component.update(now, newDate);
         dates.component.update(now, newDate);
+        eventsList.component.update(now, newDate);
         activeDate = newDate;
     };
 
@@ -62,7 +75,8 @@ function Calendar(firstDay) {
 
     const calendar = elem().classes("calendar").append(
         header = Header(nextClicked, prevClicked, undoClicked),
-        dates = Dates(firstDay)
+        dates = Dates(firstDay, buildEventIndex(events)),
+        eventsList = EventsList(events)
     );
 
     update(now);
@@ -126,8 +140,23 @@ function Header(nextClicked, prevClicked, undoClicked) {
     });
 }
 
-function Dates(firstDay) {
+function Dates(firstDay, eventsByDay) {
     let dates, lastRenderedDate;
+
+    const setCellContents = function(cell, numberText, dayKey) {
+        cell.childNodes[0].text(numberText);
+
+        const dots = cell.childNodes[1];
+        dots.replaceChildren();
+
+        const colors = dayColors(dayKey, eventsByDay);
+
+        for (const color of colors) {
+            dots.append(elem("span").classes("calendar-event-dot").styles({ backgroundColor: color }));
+        }
+
+        cell.classesIf(colors.length > 0, "calendar-has-events");
+    };
 
     const updateFullMonth = function(now, newDate) {
         const firstWeekday = new Date(newDate.getFullYear(), newDate.getMonth(), 1).getDay();
@@ -135,30 +164,46 @@ function Dates(firstDay) {
         const currentMonthDays = daysInMonth(newDate.getFullYear(), newDate.getMonth());
         const nextMonthSpilloverDays = FULL_MONTH_SLOTS - (previousMonthSpilloverDays + currentMonthDays);
         const previousMonthDays = daysInMonth(newDate.getFullYear(), newDate.getMonth() - 1)
+        const previousMonthDate = new Date(newDate.getFullYear(), newDate.getMonth() - 1, 1);
+        const nextMonthDate = new Date(newDate.getFullYear(), newDate.getMonth() + 1, 1);
         const isCurrentMonth = datesWithinSameMonth(now, newDate);
         const currentDate = now.getDate();
+
+        const dayKey = (y, m, d) => `${y}-${m}-${d}`;
 
         let children = dates.children;
         let index = 0;
 
         for (let i = 0; i < FULL_MONTH_SLOTS; i++) {
-            children[i].clearClasses("calendar-spillover-date", "calendar-current-date");
+            children[i].clearClasses("calendar-spillover-date", "calendar-current-date", "calendar-has-events");
         }
 
         for (let i = 0; i < previousMonthSpilloverDays; i++, index++) {
-            children[index].classes("calendar-spillover-date").text(
-                previousMonthDays - previousMonthSpilloverDays + i + 1
-            )
+            const day = previousMonthDays - previousMonthSpilloverDays + i + 1;
+            setCellContents(
+                children[index],
+                day,
+                dayKey(previousMonthDate.getFullYear(), previousMonthDate.getMonth(), day)
+            );
+            children[index].classes("calendar-spillover-date");
         }
 
         for (let i = 1; i <= currentMonthDays; i++, index++) {
-            children[index]
-                .classesIf(isCurrentMonth && i === currentDate, "calendar-current-date")
-                .text(i);
+            setCellContents(
+                children[index],
+                i,
+                dayKey(newDate.getFullYear(), newDate.getMonth(), i)
+            );
+            children[index].classesIf(isCurrentMonth && i === currentDate, "calendar-current-date");
         }
 
         for (let i = 0; i < nextMonthSpilloverDays; i++, index++) {
-            children[index].classes("calendar-spillover-date").text(i + 1);
+            setCellContents(
+                children[index],
+                i + 1,
+                dayKey(nextMonthDate.getFullYear(), nextMonthDate.getMonth(), i + 1)
+            );
+            children[index].classes("calendar-spillover-date");
         }
 
         lastRenderedDate = newDate;
@@ -186,9 +231,143 @@ function Dates(firstDay) {
         ),
 
         dates = elem().classes("calendar-dates", "margin-top-3").append(
-            ...elem().classes("calendar-date").duplicate(FULL_MONTH_SLOTS)
+            ...repeat(FULL_MONTH_SLOTS, () => elem().classes("calendar-date").append(
+                elem().classes("calendar-date-number"),
+                elem().classes("calendar-date-dots"),
+            ))
         )
     ).component({ update });
+}
+
+function EventsList(events) {
+    let list;
+
+    const container = elem()
+        .classes("calendar-events", "margin-top-15")
+        .append(list = elem("ul").classes("calendar-events-list"))
+        .hide();
+
+    const update = function(now, newDate) {
+        list.replaceChildren();
+
+        const year = newDate.getFullYear();
+        const month = newDate.getMonth();
+        let shown = 0;
+
+        for (const event of events) {
+            const startDate = new Date(event.start * 1000);
+            const [y, m] = event.allDay
+                ? [startDate.getUTCFullYear(), startDate.getUTCMonth()]
+                : [startDate.getFullYear(), startDate.getMonth()];
+
+            if (y !== year || m !== month) continue;
+
+            list.append(buildEventItem(event, startDate));
+            shown++;
+        }
+
+        container.showIf(shown > 0);
+
+        return this;
+    };
+
+    return container.component({ update });
+}
+
+function buildEventItem(event, startDate) {
+    let timeText;
+
+    if (event.allDay) {
+        const endDate = event.end && event.end !== event.start
+            ? new Date(event.end * 1000)
+            : null;
+
+        if (endDate) {
+            const lastDay = new Date(endDate.getTime() - 1);
+            timeText = `${localizedDate(startDate)} – ${localizedDate(lastDay)} ${t("All day")}`;
+        } else {
+            timeText = `${localizedDate(startDate)} ${t("All day")}`;
+        }
+    } else {
+        timeText = `${localizedDate(startDate)} ${formatTime(startDate)}`;
+    }
+
+    return elem("li").classes("calendar-event").append(
+        elem("span").classes("calendar-event-indicator").styles({ backgroundColor: event.color }),
+        elem("span").classes("calendar-event-time", "size-h6", "color-subdue").text(timeText),
+        elem("span").classes("calendar-event-title").text(event.summary).attr("title", event.summary),
+    );
+}
+
+function buildEventIndex(events) {
+    const byDay = new Map();
+
+    const keyOf = (date, allDay) => allDay
+        ? `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()}`
+        : `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+
+    for (const event of events) {
+        const startDate = new Date(event.start * 1000);
+
+        if (!event.allDay) {
+            pushEvent(byDay, keyOf(startDate, false), event);
+            continue;
+        }
+
+        const endDate = event.end && event.end !== event.start
+            ? new Date(event.end * 1000)
+            : null;
+
+        let cursor = startDate;
+
+        for (let i = 0; i < 366; i++) {
+            pushEvent(byDay, keyOf(cursor, true), event);
+
+            if (endDate === null || datesWithinSameUTCDay(cursor, endDate)) break;
+
+            cursor = new Date(Date.UTC(
+                cursor.getUTCFullYear(),
+                cursor.getUTCMonth(),
+                cursor.getUTCDate() + 1
+            ));
+        }
+    }
+
+    return byDay;
+}
+
+function pushEvent(byDay, key, event) {
+    const eventsOfDay = byDay.get(key);
+
+    if (eventsOfDay) {
+        eventsOfDay.push(event);
+    } else {
+        byDay.set(key, [event]);
+    }
+}
+
+function dayColors(dayKey, eventsByDay) {
+    const colors = [];
+
+    for (const event of eventsByDay.get(dayKey) ?? []) {
+        if (!colors.includes(event.color)) colors.push(event.color);
+        if (colors.length === MAX_DOTS_PER_DAY) break;
+    }
+
+    return colors;
+}
+
+function datesWithinSameUTCDay(d1, d2) {
+    return d1.getUTCFullYear() === d2.getUTCFullYear()
+        && d1.getUTCMonth() === d2.getUTCMonth()
+        && d1.getUTCDate() === d2.getUTCDate();
+}
+
+function formatTime(date) {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    return `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
 }
 
 function datesWithinSameMonth(d1, d2) {
